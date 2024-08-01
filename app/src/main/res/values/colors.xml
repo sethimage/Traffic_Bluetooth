@@ -7,4 +7,14 @@
     <color name="colorRecieveText">#00FF00</color>
     <color name="colorSendText">#82CAFF</color>
     <color name="colorStatusText">#FFDB58</color>
+
+
+    <color name="colorRed">#FF0000</color>
+    <color name="colorYellow">#FFFF00</color>
+    <color name="colorGreen">#00FF00</color>
+    <color name="colorDefault">#CCCCCC</color>
+    <color name="colorBlack">#000000</color>
+
+
+
 </resources>
