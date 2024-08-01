@@ -5,6 +5,58 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
+    
+    
+   <RadioGroup
+   	android:id="@+id/radio_group"
+        android:layout_width="match_parent"
+        android:layout_height="486dp"
+        android:orientation="vertical">
+
+        <RadioButton
+            android:id="@+id/radio_red"
+            android:layout_width="match_parent"
+            android:layout_height="102dp"
+            android:background="@color/colorRed"
+            android:text="Red" 
+        android:textColor="@color/colorBlack"
+    	android:textSize="20sp"/>
+
+        <RadioButton
+            android:id="@+id/radio_yellow"
+            android:layout_width="match_parent"
+            android:layout_height="102dp"
+            android:background="@color/colorYellow"
+            android:text="Yellow" 
+        android:textColor="@color/colorBlack"
+    android:textSize="20sp"/>
+
+        <RadioButton
+            android:id="@+id/radio_green"
+            android:layout_width="match_parent"
+            android:layout_height="102dp"
+            android:background="@color/colorGreen"
+            android:text="Green" 
+        android:textColor="@color/colorBlack"
+    android:textSize="20sp"/>
+            
+         <RadioButton
+            android:id="@+id/radio_on"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:text="All On" 
+            android:textColor="@color/colorBlack"
+    android:textSize="20sp"    />
+            
+    	<RadioButton
+            android:id="@+id/radio_off"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:text="All Off" 
+                android:textColor="@color/colorBlack"
+    android:textSize="20sp"/>
+    </RadioGroup>
+
 
     <TextView
         android:id="@+id/receive_text"
@@ -42,4 +94,3 @@
     </LinearLayout>
 
 </LinearLayout>
-
