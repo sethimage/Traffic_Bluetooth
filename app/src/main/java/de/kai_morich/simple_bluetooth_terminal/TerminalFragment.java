@@ -17,6 +17,7 @@ import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.text.method.ScrollingMovementMethod;
 import android.text.style.ForegroundColorSpan;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -25,6 +26,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
+import androidx.appcompat.app.AppCompatActivity;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -128,73 +132,74 @@ public class TerminalFragment extends Fragment implements ServiceConnection, Ser
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_terminal, container, false);
-        receiveText = view.findViewById(R.id.receive_text);                          // TextView performance decreases with number of spans
-        receiveText.setTextColor(getResources().getColor(R.color.colorRecieveText)); // set as default color to reduce number of spans
+        receiveText = view.findViewById(R.id.receive_text);
+        receiveText.setTextColor(getResources().getColor(R.color.colorRecieveText));
         receiveText.setMovementMethod(ScrollingMovementMethod.getInstance());
 
+        RadioGroup radioGroup = view.findViewById(R.id.radio_group);
+
+        radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
+                // Find the radio button that was checked
+                RadioButton checkedRadioButton = group.findViewById(checkedId);
+                // Check which radio button was clicked
+                if (checkedId == R.id.radio_red) {
+                        send("3");
+                        send("5");
+                        send("2");
+                } else if (checkedId == R.id.radio_yellow) {
+                        send("1");
+                        send("5");
+                        send("4");
+                } else if (checkedId == R.id.radio_green) {
+                        send("1");
+                        send("3");
+                        send("6");
+                } else if (checkedId == R.id.radio_off) {
+                        send("1");
+                        send("3");
+                        send("5");
+                } else if (checkedId == R.id.radio_on) {
+                        send("2");
+                        send("4");
+                        send("6");
+                }
+                Log.d("ADebugTag", "Value: " + Integer.toString(checkedId));
+            }
+        });
+
         sendText = view.findViewById(R.id.send_text);
-        hexWatcher = new TextUtil.HexWatcher(sendText);
-        hexWatcher.enable(hexEnabled);
-        sendText.addTextChangedListener(hexWatcher);
-        sendText.setHint(hexEnabled ? "HEX mode" : "");
+        //hexWatcher = new TextUtil.HexWatcher(sendText);
+        //hexWatcher.enable(hexEnabled);
+        //sendText.addTextChangedListener(hexWatcher);
+        //sendText.setHint(hexEnabled ? "HEX mode" : "");
 
         View sendBtn = view.findViewById(R.id.send_btn);
         sendBtn.setOnClickListener(v -> send(sendText.getText().toString()));
         return view;
     }
 
+
+
     @Override
     public void onCreateOptionsMenu(@NonNull Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.menu_terminal, menu);
     }
 
-    public void onPrepareOptionsMenu(@NonNull Menu menu) {
-        menu.findItem(R.id.hex).setChecked(hexEnabled);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            menu.findItem(R.id.backgroundNotification).setChecked(service != null && service.areNotificationsEnabled());
-        } else {
-            menu.findItem(R.id.backgroundNotification).setChecked(true);
-            menu.findItem(R.id.backgroundNotification).setEnabled(false);
-        }
-    }
+    //public void onPrepareOptionsMenu(@NonNull Menu menu) {
+        //menu.findItem(R.id.hex).setChecked(hexEnabled);
+        //if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+        //    menu.findItem(R.id.backgroundNotification).setChecked(service != null && service.areNotificationsEnabled());
+        //} else {
+        //    menu.findItem(R.id.backgroundNotification).setChecked(true);
+        //   menu.findItem(R.id.backgroundNotification).setEnabled(false);
+        //}
+    //}
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-        if (id == R.id.clear) {
-            receiveText.setText("");
-            return true;
-        } else if (id == R.id.newline) {
-            String[] newlineNames = getResources().getStringArray(R.array.newline_names);
-            String[] newlineValues = getResources().getStringArray(R.array.newline_values);
-            int pos = java.util.Arrays.asList(newlineValues).indexOf(newline);
-            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-            builder.setTitle("Newline");
-            builder.setSingleChoiceItems(newlineNames, pos, (dialog, item1) -> {
-                newline = newlineValues[item1];
-                dialog.dismiss();
-            });
-            builder.create().show();
-            return true;
-        } else if (id == R.id.hex) {
-            hexEnabled = !hexEnabled;
-            sendText.setText("");
-            hexWatcher.enable(hexEnabled);
-            sendText.setHint(hexEnabled ? "HEX mode" : "");
-            item.setChecked(hexEnabled);
-            return true;
-        } else if (id == R.id.backgroundNotification) {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                if (!service.areNotificationsEnabled() && Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                    requestPermissions(new String[]{Manifest.permission.POST_NOTIFICATIONS}, 0);
-                } else {
-                    showNotificationSettings();
-                }
-            }
-            return true;
-        } else {
-            return super.onOptionsItemSelected(item);
-        }
+        return true;
     }
 
     /*
